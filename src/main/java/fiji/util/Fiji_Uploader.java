@@ -1,11 +1,5 @@
 package fiji.util;
 
-/**
- * A plugin to facilitate uploading files to the ImageJ dropbox.
- *
- * @author Johannes Schindelin
- */
-
 import fiji.IJ1LogService;
 import fiji.IJ1StatusService;
 import ij.io.OpenDialog;
@@ -14,6 +8,11 @@ import imagej.plugins.commands.upload.SampleImageUploader;
 
 import java.io.File;
 
+/**
+ * A plugin to facilitate uploading files to the ImageJ dropbox.
+ *
+ * @author Johannes Schindelin
+ */
 public class Fiji_Uploader implements PlugIn {
 
 	@Override
