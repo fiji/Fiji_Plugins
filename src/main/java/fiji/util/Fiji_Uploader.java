@@ -4,9 +4,10 @@ import fiji.IJ1LogService;
 import fiji.IJ1StatusService;
 import ij.io.OpenDialog;
 import ij.plugin.PlugIn;
-import imagej.plugins.commands.upload.SampleImageUploader;
 
 import java.io.File;
+
+import net.imagej.plugins.commands.upload.SampleImageUploader;
 
 /**
  * A plugin to facilitate uploading files to the ImageJ dropbox.

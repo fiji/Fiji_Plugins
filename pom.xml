@@ -28,19 +28,19 @@
 			<artifactId>ij</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>net.imagej</groupId>
-			<artifactId>ij-core</artifactId>
-			<version>${imagej.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>net.imagej</groupId>
-			<artifactId>ij-commands</artifactId>
-			<version>${imagej.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>sc.fiji</groupId>
 			<artifactId>fiji-compat</artifactId>
 			<version>${fiji.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.scijava</groupId>
+			<artifactId>scijava-common</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.imagej</groupId>
+			<artifactId>imagej-plugins-commands</artifactId>
+			<!-- TODO: remove once pom-fiji is based on pom-imagej -->
+			<version>0.1.1</version>
 		</dependency>
 	</dependencies>
 

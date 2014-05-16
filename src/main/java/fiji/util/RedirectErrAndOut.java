@@ -3,11 +3,11 @@ package fiji.util;
 import ij.IJ;
 import ij.plugin.PlugIn;
 
-import imagej.util.LineOutputStream;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+
+import org.scijava.util.LineOutputStream;
 
 /**
  * This class installs a redirection for {@link System.err} and {@link
