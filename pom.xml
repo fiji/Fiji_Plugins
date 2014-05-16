@@ -20,11 +20,6 @@
 	<dependencies>
 		<dependency>
 			<groupId>sc.fiji</groupId>
-			<artifactId>VIB-lib</artifactId>
-			<version>${fiji.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>sc.fiji</groupId>
 			<artifactId>fiji-lib</artifactId>
 			<version>${fiji.version}</version>
 		</dependency>
