@@ -21,7 +21,6 @@
 		<dependency>
 			<groupId>sc.fiji</groupId>
 			<artifactId>fiji-lib</artifactId>
-			<version>${fiji-lib.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>net.imagej</groupId>
@@ -30,7 +29,6 @@
 		<dependency>
 			<groupId>sc.fiji</groupId>
 			<artifactId>fiji-compat</artifactId>
-			<version>${fiji-compat.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.scijava</groupId>
