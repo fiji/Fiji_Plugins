@@ -1,21 +1,15 @@
 package fiji.selection;
 
-import ij.IJ;
-
-import ij.gui.Toolbar;
-
 import ij.ImagePlus;
 import ij.ImageStack;
-
+import ij.gui.Toolbar;
 import ij.plugin.filter.PlugInFilter;
-
 import ij.process.ByteProcessor;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
 
 import java.awt.Color;
 import java.awt.Rectangle;
-
 import java.util.Arrays;
 
 public class Select_Bounding_Box implements PlugInFilter {

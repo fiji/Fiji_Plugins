@@ -1,11 +1,21 @@
 package fiji.stacks;
 
-import ij.*;
-import ij.process.*;
-import ij.gui.*;
-import ij.measure.*;
+import ij.IJ;
+import ij.ImagePlus;
+import ij.ImageStack;
+import ij.WindowManager;
+import ij.gui.GenericDialog;
+import ij.gui.ImageCanvas;
+import ij.gui.Line;
+import ij.gui.NewImage;
+import ij.gui.Roi;
+import ij.measure.Calibration;
 import ij.plugin.filter.PlugInFilter;
-import java.awt.*;
+import ij.process.ColorProcessor;
+import ij.process.ImageProcessor;
+
+import java.awt.Color;
+import java.awt.Graphics;
 
 /* 	Author: Julian Cooper, based in part on code from Slicer.java in ImageJ
 	Contact: Julian.Cooper [at] uhb.nhs.uk

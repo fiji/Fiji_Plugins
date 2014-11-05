@@ -42,12 +42,15 @@
  *
  */
 
-import ij.*;
-import ij.process.*;
-import ij.gui.*;
-import ij.plugin.*;
-import java.util.Vector;
+import ij.IJ;
+import ij.ImagePlus;
+import ij.gui.GenericDialog;
+import ij.gui.NewImage;
+import ij.plugin.PlugIn;
 import ij.plugin.filter.GaussianBlur;
+import ij.process.ImageProcessor;
+
+import java.util.Vector;
 
 public class Retinex_ implements PlugIn {
 	/*Global vars*/

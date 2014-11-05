@@ -2,17 +2,13 @@ package fiji.selection;
 
 import ij.IJ;
 import ij.ImagePlus;
-
 import ij.gui.GenericDialog;
 import ij.gui.Roi;
 import ij.gui.ShapeRoi;
-
 import ij.plugin.filter.PlugInFilter;
-
 import ij.process.ImageProcessor;
 
 import java.awt.Rectangle;
-
 import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.PathIterator;

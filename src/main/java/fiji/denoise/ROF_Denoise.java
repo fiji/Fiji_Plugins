@@ -2,11 +2,8 @@ package fiji.denoise;
 
 import ij.ImagePlus;
 import ij.ImageStack;
-
 import ij.gui.GenericDialog;
-
 import ij.plugin.filter.PlugInFilter;
-
 import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
 

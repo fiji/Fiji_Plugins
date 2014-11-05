@@ -3,9 +3,7 @@ package fiji.process3d;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
-
 import ij.plugin.filter.PlugInFilter;
-
 import ij.process.ImageProcessor;
 
 /*

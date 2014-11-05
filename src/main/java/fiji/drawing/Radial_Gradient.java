@@ -1,12 +1,9 @@
 package fiji.drawing;
 
 import ij.ImagePlus;
-
 import ij.gui.Roi;
 import ij.gui.Toolbar;
-
 import ij.plugin.filter.PlugInFilter;
-
 import ij.process.ImageProcessor;
 
 import java.awt.Rectangle;

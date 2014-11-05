@@ -1,18 +1,12 @@
 package fiji.drawing;
 
 import ij.IJ;
-import ij.gui.Line;
-
 import ij.ImagePlus;
-
+import ij.gui.Line;
 import ij.gui.Roi;
 import ij.gui.Toolbar;
-
 import ij.plugin.filter.PlugInFilter;
-
 import ij.process.ImageProcessor;
-
-import java.awt.Rectangle;
 
 public class Linear_Gradient implements PlugInFilter {
 	ImagePlus image;

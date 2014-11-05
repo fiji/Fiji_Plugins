@@ -1,14 +1,10 @@
 package fiji.selection;
 
-import ij.ImagePlus;
-
-import ij.gui.PointRoi;
-
-import ij.plugin.filter.PlugInFilter;
-
-import ij.process.ImageProcessor;
-
 import fiji.util.IntArray;
+import ij.ImagePlus;
+import ij.gui.PointRoi;
+import ij.plugin.filter.PlugInFilter;
+import ij.process.ImageProcessor;
 
 
 /**

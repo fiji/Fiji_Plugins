@@ -16,9 +16,9 @@
  */
 package fiji.util;
 
-import java.util.Comparator;
-
 import fiji.util.node.Leaf;
+
+import java.util.Comparator;
 
 /**
  * Compares which {@link Leaf} is closer to another {@link Leaf}

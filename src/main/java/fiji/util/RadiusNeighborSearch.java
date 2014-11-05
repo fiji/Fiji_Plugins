@@ -16,12 +16,12 @@ package fiji.util;
  * @author Stephan Preibisch and Johannes Schindelin
  */
 
-import java.util.ArrayList;
-import java.util.Collections;
-
 import fiji.util.node.Leaf;
 import fiji.util.node.Node;
 import fiji.util.node.NonLeaf;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class RadiusNeighborSearch<T extends Leaf<T>>
 {

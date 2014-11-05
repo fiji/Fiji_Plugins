@@ -1,11 +1,11 @@
 package fiji.util;
 
-import java.util.Arrays;
-import java.util.Comparator;
-
 import fiji.util.node.Leaf;
 import fiji.util.node.Node;
 import fiji.util.node.NonLeaf;
+
+import java.util.Arrays;
+import java.util.Comparator;
 
 public class NNearestNeighborSearch<T extends Leaf<T>>
 {

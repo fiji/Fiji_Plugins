@@ -1,12 +1,9 @@
 package fiji.util;
 
 import ij.ImagePlus;
-
 import ij.gui.GenericDialog;
 import ij.gui.OvalRoi;
-
 import ij.plugin.filter.PlugInFilter;
-
 import ij.process.ImageProcessor;
 
 /**

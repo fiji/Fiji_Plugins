@@ -1,9 +1,7 @@
 package fiji.color;
 
 import ij.ImagePlus;
-
 import ij.plugin.filter.PlugInFilter;
-
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
 

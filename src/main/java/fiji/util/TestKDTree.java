@@ -1,9 +1,9 @@
 package fiji.util;
 
+import fiji.util.node.SimpleNode;
+
 import java.util.ArrayList;
 import java.util.Random;
-
-import fiji.util.node.SimpleNode;
 
 
 public class TestKDTree

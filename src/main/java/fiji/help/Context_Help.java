@@ -1,9 +1,7 @@
 package fiji.help;
 
 import fiji.util.MenuItemDiverter;
-
 import ij.IJ;
-
 import ij.plugin.BrowserLauncher;
 
 public class Context_Help extends MenuItemDiverter {

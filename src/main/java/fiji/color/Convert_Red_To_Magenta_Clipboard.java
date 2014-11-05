@@ -1,20 +1,16 @@
 package fiji.color;
 
 import ij.IJ;
-
 import ij.plugin.PlugIn;
-
 import ij.process.ColorProcessor;
 
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
-
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
-
 import java.awt.image.BufferedImage;
 
 /**

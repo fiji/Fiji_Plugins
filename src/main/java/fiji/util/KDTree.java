@@ -1,13 +1,13 @@
 package fiji.util;
 
+import fiji.util.node.Leaf;
+import fiji.util.node.Node;
+import fiji.util.node.NonLeaf;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-
-import fiji.util.node.Leaf;
-import fiji.util.node.Node;
-import fiji.util.node.NonLeaf;
 
 public class KDTree<T extends Leaf<T>>
 {
