@@ -13,7 +13,7 @@
 	</parent>
 
 	<artifactId>Fiji_Plugins</artifactId>
-	<version>2.0.1-SNAPSHOT</version>
+	<version>2.0.1</version>
 
 	<name>plugins/Fiji_Plugins.jar</name>
 	<description></description>
