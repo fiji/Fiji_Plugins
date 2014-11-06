@@ -18,6 +18,25 @@
 	<name>plugins/Fiji_Plugins.jar</name>
 	<description></description>
 
+	<scm>
+		<connection>scm:git:git://github.com/fiji/Fiji_Plugins</connection>
+		<developerConnection>scm:git:git@github.com:fiji/Fiji_Plugins</developerConnection>
+		<tag>HEAD</tag>
+		<url>https://github.com/fiji/Fiji_Plugins</url>
+	</scm>
+	<ciManagement>
+		<system>Jenkins</system>
+		<url>http://jenkins.imagej.net/job/Fiji_Plugins/</url>
+	</ciManagement>
+
+	<repositories>
+		<!-- NB: for project parent -->
+		<repository>
+			<id>imagej.public</id>
+			<url>http://maven.imagej.net/content/groups/public</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 		<!-- Fiji dependencies -->
 		<dependency>
@@ -45,25 +64,5 @@
 			<artifactId>scijava-common</artifactId>
 		</dependency>
 	</dependencies>
-
-	<ciManagement>
-		<system>Jenkins</system>
-		<url>http://jenkins.imagej.net/job/Fiji_Plugins/</url>
-	</ciManagement>
-
-	<scm>
-		<connection>scm:git:git://github.com/fiji/Fiji_Plugins</connection>
-		<developerConnection>scm:git:git@github.com:fiji/Fiji_Plugins</developerConnection>
-		<tag>HEAD</tag>
-		<url>https://github.com/fiji/Fiji_Plugins</url>
-	</scm>
-
-	<repositories>
-		<!-- NB: for project parent -->
-		<repository>
-			<id>imagej.public</id>
-			<url>http://maven.imagej.net/content/groups/public</url>
-		</repository>
-	</repositories>
 
 </project>
