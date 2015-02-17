@@ -10,7 +10,7 @@
 	</parent>
 
 	<artifactId>Fiji_Plugins</artifactId>
-	<version>2.0.3-SNAPSHOT</version>
+	<version>3.0.0</version>
 
 	<name>plugins/Fiji_Plugins.jar</name>
 	<description />
@@ -18,7 +18,7 @@
 	<scm>
 		<connection>scm:git:git://github.com/fiji/Fiji_Plugins</connection>
 		<developerConnection>scm:git:git@github.com:fiji/Fiji_Plugins</developerConnection>
-		<tag>HEAD</tag>
+		<tag>Fiji_Plugins-3.0.0</tag>
 		<url>https://github.com/fiji/Fiji_Plugins</url>
 	</scm>
 	<ciManagement>
