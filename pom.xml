@@ -21,6 +21,10 @@
 		<tag>HEAD</tag>
 		<url>https://github.com/fiji/Fiji_Plugins</url>
 	</scm>
+	<issueManagement>
+		<system>GitHub Issues</system>
+		<url>https://github.com/fiji/Fiji_Plugins/issues</url>
+	</issueManagement>
 	<ciManagement>
 		<system>Jenkins</system>
 		<url>http://jenkins.imagej.net/job/Fiji_Plugins/</url>
