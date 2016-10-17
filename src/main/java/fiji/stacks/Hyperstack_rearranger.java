@@ -172,7 +172,11 @@ public class Hyperstack_rearranger implements PlugIn
 		newImp.setCalibration( imp.getCalibration() );
 		
 		final CompositeImage c = new CompositeImage( newImp, CompositeImage.COMPOSITE );
-		
+		if (targetChannels == 0) //if channels stay channels
+		{
+			c.setLuts(imp.getLuts());
+		}
+
 		if ( closeOldImp )
 			imp.close();
 		
