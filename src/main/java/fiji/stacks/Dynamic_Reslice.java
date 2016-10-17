@@ -266,6 +266,8 @@ public class Dynamic_Reslice implements PlugIn, MouseMotionListener,
 
 		// Create the destination ImagePlus dest_imp by get a slice a first time.
 		dest_imp = new ImagePlus("Dynamic Reslice of "+imp.getShortTitle(), getSlice(imp, imp.getRoi()));
+		dealWithCalibration();
+
 		// Copy min & max to new result
 		ImageProcessor ip = imp.getProcessor();
 		double min = ip.getMin();
@@ -391,6 +393,19 @@ public class Dynamic_Reslice implements PlugIn, MouseMotionListener,
 	
 		ImageProcessor ip_out;
 		Roi roi = imp.getRoi();
+
+
+		/*
+		 * Do reslice and update dest_imp
+		 */
+		ip_out = getSlice(imp, roi);
+		dest_imp.setProcessor(null, ip_out);
+		dealWithCalibration();
+	}
+
+	protected void dealWithCalibration()
+	{
+		Roi roi = imp.getRoi();
 		int roiType = roi != null ? roi.getType() : 0;
 
 		/*
@@ -398,12 +413,6 @@ public class Dynamic_Reslice implements PlugIn, MouseMotionListener,
 		 */
 		Calibration origCal = imp.getCalibration();
 		double zSpacing = inputZSpacing / imp.getCalibration().pixelWidth;
-
-		/*
-		 * Do reslice and update dest_imp
-		 */
-		ip_out = getSlice(imp, roi);
-		dest_imp.setProcessor(null, ip_out);
 
 		/*
 		 * Deal with calibration
