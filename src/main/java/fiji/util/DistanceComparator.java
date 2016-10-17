@@ -16,9 +16,9 @@
  */
 package fiji.util;
 
-import fiji.util.node.Leaf;
-
 import java.util.Comparator;
+
+import fiji.util.node.Leaf;
 
 /**
  * Compares which {@link Leaf} is closer to another {@link Leaf}
@@ -26,6 +26,7 @@ import java.util.Comparator;
  * @author Johannes Schindelin and Stephan Preibisch
  *
  * @param <T>
+ *            the type of object stored in the leaf.
  */
 public class DistanceComparator< T extends Leaf<T> > implements Comparator<T>
 {

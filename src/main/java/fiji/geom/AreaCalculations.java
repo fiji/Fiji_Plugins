@@ -20,7 +20,7 @@ public class AreaCalculations {
 
 		public abstract void handleSegment();
 
-		public void apply(PathIterator path) {
+		public void apply(final PathIterator path) {
 			double[] swap;
 
 			while (!path.isDone()) {
@@ -47,7 +47,7 @@ public class AreaCalculations {
 			}
 		}
 
-		public double calculate(PathIterator path) {
+		public double calculate(final PathIterator path) {
 			result = 0;
 			apply(path);
 			return result;
@@ -55,19 +55,26 @@ public class AreaCalculations {
 	}
 
 	protected static class Circumference extends Calculation {
+		@Override
 		public void handleSegment() {
-			double x = current[0] - previous[0];
-			double y = current[1] - previous[1];
+			final double x = current[0] - previous[0];
+			final double y = current[1] - previous[1];
 			result += Math.sqrt(x * x + y * y);
 		}
 	}
 
-	/** Compute the perimeter of the path or multiple paths in @param path. */
-	public static double circumference(PathIterator path) {
+	/**
+	 * Computes the perimeter of the specified path or multiple paths.
+	 * 
+	 * @param path
+	 *            the path.
+	 * @return the perimeter.
+	 */
+	public static double circumference(final PathIterator path) {
 		return new Circumference().calculate(path);
 	}
 
-	public static double triangleArea(double[] a, double[] b, double[] c) {
+	public static double triangleArea(final double[] a, final double[] b, final double[] c) {
 		/* half the scalar product between (b - a)^T and (c - a) */
 		return ((a[1] - b[1]) * (c[0] - a[0]) +
 			(b[0] - a[0]) * (c[1] - a[1])) / 2;
@@ -75,21 +82,32 @@ public class AreaCalculations {
 
 	/* This assumes even/odd winding rule, and it has a sign */
 	protected static class Area extends Calculation {
+		@Override
 		public void handleSegment() {
 			result += triangleArea(start, previous, current);
 		}
 	}
 
-	/** Compute the surface area of the path or multuple paths in @param path; returns a positive value for counter-clockwise paths, and negative for clockwise paths. Considers holes as holes; i.e. will do the right operation. */
-	public static double area(PathIterator path) {
+	/**
+	 * Computes the surface area of the path or multiple specified paths.
+	 * Returns a positive value for counter-clockwise paths, and negative for
+	 * clockwise paths. Considers holes as holes; i.e. will do the right
+	 * operation.
+	 * 
+	 * @param path
+	 *            the path.
+	 * @return the area.
+	 */
+	public static double area(final PathIterator path) {
 		return new Area().calculate(path);
 	}
 
 	protected static class Centroid extends Calculation {
 		double totalArea, x, y;
 
+		@Override
 		public void handleSegment() {
-			double area = triangleArea(start, previous, current);
+			final double area = triangleArea(start, previous, current);
 			totalArea += area;
 			x += (start[0] + previous[0] + current[0]) / 3 * area;
 			y += (start[1] + previous[1] + current[1]) / 3 * area;
@@ -100,14 +118,14 @@ public class AreaCalculations {
 		}
 	}
 
-	public static double[] centroid(PathIterator path) {
-		Centroid centroid = new Centroid();
+	public static double[] centroid(final PathIterator path) {
+		final Centroid centroid = new Centroid();
 		centroid.apply(path);
 		return centroid.getResult();
 	}
 
-	public static void main(String[] args) {
-		GeneralPath path = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
+	public static void main(final String[] args) {
+		final GeneralPath path = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
 		path.moveTo(100, 100);
 		path.lineTo(200, 110);
 		path.lineTo(190, 213);
@@ -143,12 +161,12 @@ public class AreaCalculations {
 		System.err.println("result: " + result + ", expect: " + expect +
 				", diff: " + (result - expect));
 
-		double[] result2 = centroid(path.getPathIterator(null));
-		double area1 = triangleArea(new double[] { 100, 100 },
+		final double[] result2 = centroid(path.getPathIterator(null));
+		final double area1 = triangleArea(new double[] { 100, 100 },
 			new double[] { 200, 110 }, new double[] { 190, 213 });
-		double area2 = triangleArea(new double[] { 100, 100 },
+		final double area2 = triangleArea(new double[] { 100, 100 },
 			new double[] { 190, 213 }, new double[] { 105, 205 });
-		double[] expect2 = new double[2];
+		final double[] expect2 = new double[2];
 		expect2[0] = (area1 * (100 + 200 + 190) / 3
 				+ area2 * (100 + 190 + 105) / 3)
 			/ (area1 + area2);

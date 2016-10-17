@@ -20,7 +20,7 @@ public class Hyperstack_rearranger implements PlugIn
 	public String[] choice = new String[] { "Channels (c)", "Slices (z)", "Frames (t)" };
 	
 	@Override
-	public void run(String arg0) 
+	public void run(final String arg0) 
 	{
 		final ImagePlus imp = WindowManager.getCurrentImage();
 		
@@ -183,11 +183,16 @@ public class Hyperstack_rearranger implements PlugIn
 	}
 
 	/**
-	 * Returns an {@link ImagePlus} for a 2d or 3d stack where ImageProcessors are not copied but just added.
+	 * Returns an {@link ImagePlus} for a 2d or 3d stack where ImageProcessors
+	 * are not copied but just added.
 	 * 
-	 * @param imp - the input image
-	 * @param channel - which channel (first channel is 1, NOT 0)
-	 * @param timepoint - which timepoint (first timepoint is 1, NOT 0)
+	 * @param imp
+	 *            - the input image
+	 * @param channel
+	 *            - which channel (first channel is 1, NOT 0)
+	 * @param timepoint
+	 *            - which timepoint (first timepoint is 1, NOT 0)
+	 * @return a new {@link ImagePlus}.
 	 */
 	public static ImagePlus getImageChunk( final ImagePlus imp, final int channel, final int timepoint )
 	{

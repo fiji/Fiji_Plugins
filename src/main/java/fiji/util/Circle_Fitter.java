@@ -85,24 +85,26 @@ public class Circle_Fitter implements PlugInFilter {
 	float threshold = Float.NaN;
 	int w, h;
 
-	public int setup(String arg, ImagePlus image) {
+	@Override
+	public int setup(final String arg, final ImagePlus image) {
 		this.image = image;
 		return DOES_ALL | NO_CHANGES;
 	}
 
-	public void run(ImageProcessor ip) {
+	@Override
+	public void run(final ImageProcessor ip) {
 		this.ip = ip;
 		w = ip.getWidth();
 		h = ip.getHeight();
 		threshold = getDefaultThreshold();
 
-		GenericDialog gd = new GenericDialog("Fit Circle");
+		final GenericDialog gd = new GenericDialog("Fit Circle");
 		gd.addNumericField("threshold", threshold, 2);
 		gd.showDialog();
 		if (gd.wasCanceled())
 			return;
 		threshold = (float)gd.getNextNumber();
-		OvalRoi roi = calculateRoi();
+		final OvalRoi roi = calculateRoi();
 		image.setRoi(roi);
 	}
 
@@ -121,7 +123,7 @@ public class Circle_Fitter implements PlugInFilter {
 		x = y = total = 0;
 		for (int j = 0; j < h; j++)
 			for (int i = 0; i < w; i++) {
-				float value = getValue(i, j);
+				final float value = getValue(i, j);
 				x += i * value;
 				y += j * value;
 				total += value;
@@ -135,9 +137,9 @@ public class Circle_Fitter implements PlugInFilter {
 		uu = uv = vv = uuu = uuv = uvv = vvv = 0;
 		for (int j = 0; j < h; j++)
 			for (int i = 0; i < w; i++) {
-				float value = getValue(i, j);
-				float u = i - x;
-				float v = j - y;
+				final float value = getValue(i, j);
+				final float u = i - x;
+				final float v = j - y;
 				uu += u * u * value;
 				uv += u * v * value;
 				vv += v * v * value;
@@ -148,54 +150,57 @@ public class Circle_Fitter implements PlugInFilter {
 			}
 
 		// calculate center & radius
-		float f = 0.5f / (uu * vv - uv * uv);
-		float centerU = (vv * (uuu + uvv) - uv * (uuv + vvv)) * f;
-		float centerV = (-uv * (uuu + uvv) + uu * (uuv + vvv)) * f;
-		float radius = (float)Math.sqrt(centerU * centerU
+		final float f = 0.5f / (uu * vv - uv * uv);
+		final float centerU = (vv * (uuu + uvv) - uv * (uuv + vvv)) * f;
+		final float centerV = (-uv * (uuu + uvv) + uu * (uuv + vvv)) * f;
+		final float radius = (float)Math.sqrt(centerU * centerU
 				+ centerV * centerV + (uu + vv) / total);
 
-		int x0 = (int)Math.max(0, x + centerU - radius);
-		int y0 = (int)Math.max(0, y + centerV - radius);
-		int x1 = (int)Math.min(w, x + centerU + radius);
-		int y1 = (int)Math.min(h, y + centerV + radius);
+		final int x0 = (int)Math.max(0, x + centerU - radius);
+		final int y0 = (int)Math.max(0, y + centerV - radius);
+		final int x1 = (int)Math.min(w, x + centerU + radius);
+		final int y1 = (int)Math.min(h, y + centerV + radius);
 		return new OvalRoi(x0, y0, x1 - x0, y1 - y0);
 	}
 
 
-	float getValue(int i, int j) {
+	float getValue(final int i, final int j) {
 		return Math.max(0, ip.getf(i, j) - threshold);
 	}
 
 	/**
-	 * The default threshold is determined like this: as a circle is a
-	 * linear structure, we want the _square root_ of the total number of
-	 * pixels to contribute.
-	 *
-	 * Therefore, we split the histogram into background and foreground
-	 * where the number of pixels in the foreground part is \sqrt(w * h)
-	 * and the split point is the desired threshold.
+	 * The default threshold is determined like this: as a circle is a linear
+	 * structure, we want the _square root_ of the total number of pixels to
+	 * contribute.
+	 * <p>
+	 * Therefore, we split the histogram into background and foreground where
+	 * the number of pixels in the foreground part is \sqrt(w * h) and the split
+	 * point is the desired threshold.
+	 * 
+	 * @return the default threshold.
 	 */
 	public float getDefaultThreshold() {
 		if (ip==null) { return Float.NaN; }
-		int w = ip.getWidth(), h = ip.getHeight();
+		final int w = ip.getWidth(), h = ip.getHeight();
 		float min, max;
 		min = max = ip.getf(0, 0);
 		// We cannot trust ip.getMin()!
 		for (int j = 0; j < h; j++)
 			for (int i = 0; i < w; i++) {
-				float v = ip.getf(i, j);
+				final float v = ip.getf(i, j);
 				if (min > v)
 					min = v;
 				else if (max < v)
 					max = v;
 			}
-		float[] histogram = new float[256];
+		final float[] histogram = new float[256];
 
 		for (int j = 0; j < h; j++)
 			for (int i = 0; i < w; i++)
 				histogram[(int)((ip.getf(i, j) - min)
 					* 255.99f / (max - min))]++;
-		int total = 0, i, want = (int)Math.sqrt(w * h);
+		int total = 0, i;
+		final int want = (int)Math.sqrt(w * h);
 		for (i = 255; i > 0 && total < want; i--)
 			total += histogram[i];
 		return min + i * (max - min) / 255.99f;
@@ -218,14 +223,14 @@ public class Circle_Fitter implements PlugInFilter {
 	 * will be ignored in the weight.
 	 * @param threshold  the threshold.
 	 */
-	public void setThreshold(float threshold) {
+	public void setThreshold(final float threshold) {
 		this.threshold = threshold;
 	}
 	
 	/**
-	 * Set the threshold used by this plugin to be the default one.
+	 * Sets the threshold used by this plugin to be the default one.
 	 * 
-	 * @see {@link Circle_Fitter.getDefaultThreshold}
+	 * @see #getDefaultThreshold
 	 */
 	public void setAutoThreshold() {
 		this.threshold = getDefaultThreshold();
@@ -235,7 +240,7 @@ public class Circle_Fitter implements PlugInFilter {
 	 * Set the ImageProcessor that will be fitted.
 	 * @param ip  the ImageProcessor
 	 */
-	public void setImageProcessor(ImageProcessor ip) {
+	public void setImageProcessor(final ImageProcessor ip) {
 		this.ip = ip;
 		w = ip.getWidth();
 		h = ip.getHeight();

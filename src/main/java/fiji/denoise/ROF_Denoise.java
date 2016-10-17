@@ -9,16 +9,21 @@ import ij.process.ImageProcessor;
 
 /**
  * This denoising method is based on total-variation, originally proposed by
- * Rudin, Osher and Fatemi. In this particular case fixed point iteration
- * is utilized.
- *
- * For the included image, a fairly good result is obtained by using a
- * theta value around 12-16. A possible addition would be to analyze the
- * residual with an entropy function and add back areas that have a lower
- * entropy, i.e. there are some correlation between the surrounding pixels.
- *
- * Based on the Matlab code by Philippe Magiera & Carl Löndahl:
- * http://www.mathworks.com/matlabcentral/fileexchange/22410-rof-denoising-algorithm
+ * Rudin, Osher and Fatemi. In this particular case fixed point iteration is
+ * utilized.
+ * <p>
+ * For the included image, a fairly good result is obtained by using a theta
+ * value around 12-16. A possible addition would be to analyze the residual with
+ * an entropy function and add back areas that have a lower entropy, i.e. there
+ * are some correlation between the surrounding pixels.
+ * <p>
+ * Based on the
+ * 
+ * <a href=
+ * "http://www.mathworks.com/matlabcentral/fileexchange/22410-rof-denoising-algorithm">
+ * Matlab code</a>
+ * 
+ * by Philippe Magiera and Carl Londahl.
  */
 public class ROF_Denoise implements PlugInFilter {
 	protected ImagePlus image;
@@ -30,7 +35,8 @@ public class ROF_Denoise implements PlugInFilter {
 	 * @param arg can be specified in plugins.config
 	 * @param image is the currently opened image
 	 */
-	public int setup(String arg, ImagePlus image) {
+	@Override
+	public int setup(final String arg, final ImagePlus image) {
 		this.image = image;
 		return DOES_32;
 	}
@@ -41,34 +47,35 @@ public class ROF_Denoise implements PlugInFilter {
 	 * @param ip is the current slice (typically, plugins use
 	 * the ImagePlus set above instead).
 	 */
-	public void run(ImageProcessor ip) {
-		GenericDialog gd = new GenericDialog("ROF Denoise");
+	@Override
+	public void run(final ImageProcessor ip) {
+		final GenericDialog gd = new GenericDialog("ROF Denoise");
 		gd.addNumericField("Theta", 25, 2);
 		gd.showDialog();
 		if (gd.wasCanceled())
 			return;
-		float theta = (float)gd.getNextNumber();
+		final float theta = (float)gd.getNextNumber();
 
-		ImageStack stack = image.getStack();
+		final ImageStack stack = image.getStack();
 		for (int slice = 1; slice <= stack.getSize(); slice++)
 			denoise((FloatProcessor)stack.getProcessor(slice), theta);
 		image.updateAndDraw();
 	}
 
-	public static void denoise(FloatProcessor ip, float theta) {
+	public static void denoise(final FloatProcessor ip, final float theta) {
 		denoise(ip, theta, 1, 0.25f, 5);
 	}
 
-	public static void denoise(FloatProcessor ip, float theta, float g, float dt, int iterations) {
-		int w = ip.getWidth();
-		int h = ip.getHeight();
-		float[] pixels = (float[])ip.getPixels();
+	public static void denoise(final FloatProcessor ip, final float theta, final float g, final float dt, final int iterations) {
+		final int w = ip.getWidth();
+		final int h = ip.getHeight();
+		final float[] pixels = (float[])ip.getPixels();
 
-		float[] u = new float[w * h];
-		float[] p = new float[w * h * 2];
-		float[] d = new float[w * h * 2];
-		float[] du = new float[w * h * 2];
-		float[] div_p = new float[w * h];
+		final float[] u = new float[w * h];
+		final float[] p = new float[w * h * 2];
+		final float[] d = new float[w * h * 2];
+		final float[] du = new float[w * h * 2];
+		final float[] div_p = new float[w * h];
 
 		for (int iteration = 0; iteration < iterations; iteration++) {
 			for (int i = 0; i < w; i++) {
@@ -104,7 +111,7 @@ public class ROF_Denoise implements PlugInFilter {
 			// Iterate
 			for (int j = 0; j < h; j++)
 				for (int i = 0; i < w; i++) {
-					float du1 = du[i + w * j], du2 = du[i + w * (j + h)];
+					final float du1 = du[i + w * j], du2 = du[i + w * (j + h)];
 					d[i + w * j] = 1 + dt / theta / g * Math.abs((float)Math.sqrt(du1 * du1 + du2 * du2));
 					d[i + w * (j + h)] = 1 + dt / theta / g * Math.abs((float)Math.sqrt(du1 * du1 + du2 * du2));
 					p[i + w * j] = (p[i + w * j] - dt / theta * du[i + w * j]) / d[i + w * j];

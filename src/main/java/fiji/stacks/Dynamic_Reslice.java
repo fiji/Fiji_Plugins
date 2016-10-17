@@ -1,5 +1,11 @@
 package fiji.stacks;
 
+import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+
 import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -14,12 +20,6 @@ import ij.plugin.Slicer;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
 
-import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-
 /**
  * <h2>Dynamic reslice of a stack.</h2>
  * 
@@ -29,7 +29,6 @@ import java.awt.event.WindowListener;
  * deformed. It is based on the Reslice command, as it is in ImageJ version
  * 1.42l, by Patrick Kelly, Harvey Karten, Wayne Rasband, Julian Cooper and
  * Adrian Deerr
- * <p>
  * 
  * <h3>Version history</h3>
  * 
@@ -62,10 +61,10 @@ import java.awt.event.WindowListener;
  * 
  * <p>
  * 
- * @author Jean-Yves Tinevez (tinevez at mpi-cbg dot de) & Albert Cardona
+ * @author Jean-Yves Tinevez
+ * @author Albert Cardona
  * @see Slicer
  * @version 1.2
- * @category Image > Stacks
  */
 public class Dynamic_Reslice implements PlugIn, MouseMotionListener,
 		WindowListener {
@@ -88,7 +87,7 @@ public class Dynamic_Reslice implements PlugIn, MouseMotionListener,
 	/**
 	 * Stores the source ImagePlus for this plugin.
 	 */
-	private ImagePlus imp;
+	private final ImagePlus imp;
 	/**
 	 * Store the destination output for this plugin. This is where the 
 	 * reslice is going to be drawn.
@@ -168,6 +167,7 @@ public class Dynamic_Reslice implements PlugIn, MouseMotionListener,
 			}
 		}
 
+		@Override
 		public void run() {
 			while (!isInterrupted()) {
 				try {
@@ -185,7 +185,7 @@ public class Dynamic_Reslice implements PlugIn, MouseMotionListener,
 						}
 						// else loop through to update again
 					}
-				} catch (Exception e) {
+				} catch (final Exception e) {
 				}
 			}
 		}
@@ -213,7 +213,7 @@ public class Dynamic_Reslice implements PlugIn, MouseMotionListener,
 	 * 
 	 * @param _imp            the source ImagePlus
 	 */
-	public Dynamic_Reslice(ImagePlus _imp) {
+	public Dynamic_Reslice(final ImagePlus _imp) {
 		this.imp = _imp;
 		setup();
 	}
@@ -225,16 +225,17 @@ public class Dynamic_Reslice implements PlugIn, MouseMotionListener,
 	/**
 	 * Main method, called when the plugin is launched from ImageJ menu.
 	 */
-	public void run(String arg) {
+	@Override
+	public void run(final String arg) {
 
 		if (imp == null) {
 			IJ.noImage();
 			return;
 		}
 
-		int stackSize = imp.getStackSize();
-		Roi roi = imp.getRoi();
-		int roiType = roi != null ? roi.getType() : 0;
+		final int stackSize = imp.getStackSize();
+		final Roi roi = imp.getRoi();
+		final int roiType = roi != null ? roi.getType() : 0;
 
 		// stack required except for ROI = none or RECT
 		if (stackSize < 2 && roi != null && roiType != Roi.RECTANGLE) {
@@ -267,9 +268,9 @@ public class Dynamic_Reslice implements PlugIn, MouseMotionListener,
 		// Create the destination ImagePlus dest_imp by get a slice a first time.
 		dest_imp = new ImagePlus("Dynamic Reslice of "+imp.getShortTitle(), getSlice(imp, imp.getRoi()));
 		// Copy min & max to new result
-		ImageProcessor ip = imp.getProcessor();
-		double min = ip.getMin();
-		double max = ip.getMax();
+		final ImageProcessor ip = imp.getProcessor();
+		final double min = ip.getMin();
+		final double max = ip.getMax();
 		if (!rgb) dest_imp.getProcessor().setMinAndMax(min, max);
 
 		// Display window result
@@ -322,19 +323,19 @@ public class Dynamic_Reslice implements PlugIn, MouseMotionListener,
 	 * @param roi  the Roi to use for reslice
 	 * @return  an ImageProcessor with the resulting slice
 	 */
-	protected ImageProcessor getSlice(ImagePlus imp, Roi roi) {
+	protected ImageProcessor getSlice(final ImagePlus imp, final Roi roi) {
 
 		if (roi == null) return null;
-		int roiType = roi.getType();
-		ImageStack stack = imp.getStack();
-		int stackSize = stack.getSize();
+		final int roiType = roi.getType();
+		final ImageStack stack = imp.getStack();
+		final int stackSize = stack.getSize();
 		ImageProcessor ip_out = null, ip;
 		boolean ortho = false;
 		float[] line = null;
 		double x1 = 0, x2 = 0, y1 = 0, y2 = 0;
 
 		if (roiType == Roi.LINE) {
-			Line lineRoi = (Line) roi;
+			final Line lineRoi = (Line) roi;
 			x1 = lineRoi.x1d;
 			y1 = lineRoi.y1d;
 			x2 = lineRoi.x2d;
@@ -366,8 +367,8 @@ public class Dynamic_Reslice implements PlugIn, MouseMotionListener,
 		}
 
 		// Deal with calibration
-		Calibration cal = imp.getCalibration();
-		double zSpacing = inputZSpacing / cal.pixelWidth;
+		final Calibration cal = imp.getCalibration();
+		final double zSpacing = inputZSpacing / cal.pixelWidth;
 		if (zSpacing != 1.0) {
 			ip_out.setInterpolate(true);
 			if (rotate)
@@ -390,14 +391,14 @@ public class Dynamic_Reslice implements PlugIn, MouseMotionListener,
 	protected void reslice() {
 	
 		ImageProcessor ip_out;
-		Roi roi = imp.getRoi();
-		int roiType = roi != null ? roi.getType() : 0;
+		final Roi roi = imp.getRoi();
+		final int roiType = roi != null ? roi.getType() : 0;
 
 		/*
 		 * Save calibration
 		 */
-		Calibration origCal = imp.getCalibration();
-		double zSpacing = inputZSpacing / imp.getCalibration().pixelWidth;
+		final Calibration origCal = imp.getCalibration();
+		final double zSpacing = inputZSpacing / imp.getCalibration().pixelWidth;
 
 		/*
 		 * Do reslice and update dest_imp
@@ -413,13 +414,13 @@ public class Dynamic_Reslice implements PlugIn, MouseMotionListener,
 		boolean horizontal = false;
 		boolean vertical = false;
 		if (roi != null && roiType == Roi.LINE) {
-			Line l = (Line) roi;
+			final Line l = (Line) roi;
 			horizontal = (l.y2 - l.y1) == 0;
 			vertical = (l.x2 - l.x1) == 0;
 		}
 		
 		dest_imp.setCalibration(imp.getCalibration());
-		Calibration cal = dest_imp.getCalibration();
+		final Calibration cal = dest_imp.getCalibration();
 		if (horizontal) {
 			cal.pixelWidth = origCal.pixelWidth;
 			cal.pixelHeight = origCal.pixelDepth / zSpacing;
@@ -460,31 +461,31 @@ public class Dynamic_Reslice implements PlugIn, MouseMotionListener,
 	 *      {@link #getLine(ImageProcessor, double, double, double, double) getLine},
 	 *      {@link #getOrthoLine(ImageProcessor, int, int, int, int) getOrthoLine}
 	 */
-	private float[] getIrregularProfile(ImageProcessor ip, Roi roi) {
+	private float[] getIrregularProfile(final ImageProcessor ip, final Roi roi) {
 
 		doIrregularSetup(roi);
-		float[] values = new float[(int) length];
+		final float[] values = new float[(int) length];
 		double leftOver = 1.0;
 		double distance = 0.0;
 		int index;
 		for (int i = 0; i < n; i++) {
-			double len = segmentLengths[i];
+			final double len = segmentLengths[i];
 			if (len == 0.0)
 				continue;
-			double xinc = dx[i] / len;
-			double yinc = dy[i] / len;
-			double start = 1.0 - leftOver;
+			final double xinc = dx[i] / len;
+			final double yinc = dy[i] / len;
+			final double start = 1.0 - leftOver;
 			double rx = xbase + x[i] + start * xinc;
 			double ry = ybase + y[i] + start * yinc;
-			double len2 = len - start;
-			int n2 = (int) len2;
+			final double len2 = len - start;
+			final int n2 = (int) len2;
 			for (int j = 0; j <= n2; j++) {
 				index = (int) distance + j;
 				if (index < values.length) {
 					if (notFloat)
 						values[index] = (float) ip.getInterpolatedPixel(rx, ry);
 					else if (rgb) {
-						int rgbPixel = ((ColorProcessor) ip)
+						final int rgbPixel = ((ColorProcessor) ip)
 								.getInterpolatedRGBPixel(rx, ry);
 						values[index] = Float
 								.intBitsToFloat(rgbPixel & 0xffffff);
@@ -515,21 +516,21 @@ public class Dynamic_Reslice implements PlugIn, MouseMotionListener,
 	 * @see {@link #getIrregularProfile(ImageProcessor, Roi) getIrregularProfile getIrregularProfile},
 	 * {@link #getIrregularProfile(ImageProcessor, Roi) getIrregularProfile}
 	 */
-	private float[] getLine(ImageProcessor ip, double x1, double y1, double x2,
-			double y2) {
-		double dx = x2 - x1;
-		double dy = y2 - y1;
-		int n = (int) Math.round(Math.sqrt(dx * dx + dy * dy));
-		float[] data = new float[n];
-		double xinc = dx / n;
-		double yinc = dy / n;
+	private float[] getLine(final ImageProcessor ip, final double x1, final double y1, final double x2,
+			final double y2) {
+		final double dx = x2 - x1;
+		final double dy = y2 - y1;
+		final int n = (int) Math.round(Math.sqrt(dx * dx + dy * dy));
+		final float[] data = new float[n];
+		final double xinc = dx / n;
+		final double yinc = dy / n;
 		double rx = x1;
 		double ry = y1;
 		for (int i = 0; i < n; i++) {
 			if (notFloat)
 				data[i] = (float) ip.getInterpolatedPixel(rx, ry);
 			else if (rgb) {
-				int rgbPixel = ((ColorProcessor) ip).getInterpolatedRGBPixel(
+				final int rgbPixel = ((ColorProcessor) ip).getInterpolatedRGBPixel(
 						rx, ry);
 				data[i] = Float.intBitsToFloat(rgbPixel & 0xffffff);
 			} else
@@ -553,24 +554,24 @@ public class Dynamic_Reslice implements PlugIn, MouseMotionListener,
 	 * @see {@link #getLine(ImageProcessor, double, double, double, double) getLine},
 	 * {@link #getIrregularProfile(ImageProcessor, Roi) getIrregularProfile}
 	 */
-	private float[] getOrthoLine(ImageProcessor ip, int x1, int y1, int x2,
-			int y2) {
-		int dx = x2 - x1;
-		int dy = y2 - y1;
-		int n = Math.max(Math.abs(dx), Math.abs(dy));
-		float[] data = new float[n];
-		int xinc = dx / n;
-		int yinc = dy / n;
+	private float[] getOrthoLine(final ImageProcessor ip, final int x1, final int y1, final int x2,
+			final int y2) {
+		final int dx = x2 - x1;
+		final int dy = y2 - y1;
+		final int n = Math.max(Math.abs(dx), Math.abs(dy));
+		final float[] data = new float[n];
+		final int xinc = dx / n;
+		final int yinc = dy / n;
 		int rx = x1;
 		int ry = y1;
 		for (int i = 0; i < n; i++) {
 			if (notFloat)
-				data[i] = (float) ip.getPixel(rx, ry);
+				data[i] = ip.getPixel(rx, ry);
 			else if (rgb) {
-				int rgbPixel = ((ColorProcessor) ip).getPixel(rx, ry);
+				final int rgbPixel = ((ColorProcessor) ip).getPixel(rx, ry);
 				data[i] = Float.intBitsToFloat(rgbPixel & 0xffffff);
 			} else
-				data[i] = (float) ip.getPixelValue(rx, ry);
+				data[i] = ip.getPixelValue(rx, ry);
 			rx += xinc;
 			ry += yinc;
 		}
@@ -586,10 +587,10 @@ public class Dynamic_Reslice implements PlugIn, MouseMotionListener,
 	 * @param roi
 	 *            the POLYLINE or FREELINE Roi to work on
 	 */
-	private void doIrregularSetup(Roi roi) {
+	private void doIrregularSetup(final Roi roi) {
 		n = ((PolygonRoi) roi).getNCoordinates();
-		int[] ix = ((PolygonRoi) roi).getXCoordinates();
-		int[] iy = ((PolygonRoi) roi).getYCoordinates();
+		final int[] ix = ((PolygonRoi) roi).getXCoordinates();
+		final int[] iy = ((PolygonRoi) roi).getYCoordinates();
 		x = new double[n];
 		y = new double[n];
 		for (int i = 0; i < n; i++) {
@@ -603,7 +604,7 @@ public class Dynamic_Reslice implements PlugIn, MouseMotionListener,
 				y[i] = (y[i - 1] + y[i] + y[i + 1]) / 3.0 + 0.5;
 			}
 		}
-		Rectangle r = roi.getBounds();
+		final Rectangle r = roi.getBounds();
 		xbase = r.x;
 		ybase = r.y;
 		length = 0.0;
@@ -623,7 +624,7 @@ public class Dynamic_Reslice implements PlugIn, MouseMotionListener,
 		}
 	}
 	
-	private void putRow(ImageProcessor ip, int x, int y, float[] data, int length) {
+	private void putRow(final ImageProcessor ip, int x, final int y, final float[] data, final int length) {
 		if (rgb) {
 			for (int i = 0; i < length; i++)
 				ip.putPixel(x++, y, Float.floatToIntBits(data[i]));
@@ -633,7 +634,7 @@ public class Dynamic_Reslice implements PlugIn, MouseMotionListener,
 		}
 	}
 
-	private void putColumn(ImageProcessor ip, int x, int y, float[] data, int length) {
+	private void putColumn(final ImageProcessor ip, final int x, int y, final float[] data, final int length) {
 		if (rgb) {
 			for (int i = 0; i < length; i++)
 				ip.putPixel(x, y++, Float.floatToIntBits(data[i]));
@@ -656,7 +657,7 @@ public class Dynamic_Reslice implements PlugIn, MouseMotionListener,
 		/*
 		 * Create and display generic dialog
 		 */
-		GenericDialog gd = new GenericDialog("Dynamic Reslice");
+		final GenericDialog gd = new GenericDialog("Dynamic Reslice");
 		gd.addCheckbox("Flip Vertically", flip);
 		gd.addCheckbox("Rotate 90 Degrees", rotate);
 		gd.showDialog();
@@ -675,7 +676,7 @@ public class Dynamic_Reslice implements PlugIn, MouseMotionListener,
 	 * source ImagePlus, {@link #imp}.
 	 */
 	private void setup() {
-		Calibration cal = imp.getCalibration();
+		final Calibration cal = imp.getCalibration();
 		if (cal.pixelDepth < 0.0)
 			cal.pixelDepth = -cal.pixelDepth;
 		if (cal.pixelWidth == 0.0)
@@ -702,26 +703,33 @@ public class Dynamic_Reslice implements PlugIn, MouseMotionListener,
 	 */
 	
 	/**
-	 * Get the flip state for this instance. If true, the slices in the source stack
-	 * will be parsed from bottom to top.
+	 * Get the flip state for this instance. If true, the slices in the source
+	 * stack will be parsed from bottom to top.
+	 * 
+	 * @return whether the source will be flipped.
 	 */
 	public boolean getFlip() {
 		return flip;
 	}
 	
 	/**
-	 * Set the flip state for this instance. If sets to true, the slices in the source stack
-	 * will be parsed from bottom to top. Cannot be changed after the start() method has been
-	 * called on this plugin.
+	 * Set the flip state for this instance. If sets to true, the slices in the
+	 * source stack will be parsed from bottom to top. Cannot be changed after
+	 * the start() method has been called on this plugin.
+	 * 
+	 * @param _flip
+	 *            whether the source will be flipped.
 	 */
-	public void setFlip(boolean _flip) {
+	public void setFlip(final boolean _flip) {
 		if (hasStarted) return;
 		this.flip = _flip;
 	}
 	
 	/**
-	 * Get the rotate state for this instance. If true, the result image
-	 * will be rotated 90°.
+	 * Get the rotate state for this instance. If true, the result image will be
+	 * rotated 90°.
+	 * 
+	 * @return whether the result will be rotated.
 	 */
 	public boolean getRotate() {
 		return rotate;
@@ -729,10 +737,13 @@ public class Dynamic_Reslice implements PlugIn, MouseMotionListener,
 	
 	/**
 	 * Set the flip state for this instance. If sets to true, the result image
-	 * will be be rotated 90°. Cannot be changed after the start() method has been
-	 * called on this plugin.
+	 * will be be rotated 90°. Cannot be changed after the start() method has
+	 * been called on this plugin.
+	 * 
+	 * @param _rotate
+	 *            whether the result image must be rotated.
 	 */
-	public void setRotate(boolean _rotate) {
+	public void setRotate(final boolean _rotate) {
 		if (hasStarted) return;
 		this.rotate = _rotate;
 	}
@@ -745,21 +756,30 @@ public class Dynamic_Reslice implements PlugIn, MouseMotionListener,
 	 * EVENTS
 	 */
 
-	public void mouseDragged(MouseEvent e) {
+	@Override
+	public void mouseDragged(final MouseEvent e) {
 		e.consume();
 		updater.doUpdate();
 	}
 
-	public void windowClosing(WindowEvent e) {
+	@Override
+	public void windowClosing(final WindowEvent e) {
 		shutdown();
 	}
 
-	public void mouseMoved(MouseEvent e) {	}
-	public void windowActivated(WindowEvent e) {}
-	public void windowClosed(WindowEvent e) {}
-	public void windowDeactivated(WindowEvent e) {}
-	public void windowDeiconified(WindowEvent e) {}
-	public void windowIconified(WindowEvent e) {}
-	public void windowOpened(WindowEvent e) {}
+	@Override
+	public void mouseMoved(final MouseEvent e) {	}
+	@Override
+	public void windowActivated(final WindowEvent e) {}
+	@Override
+	public void windowClosed(final WindowEvent e) {}
+	@Override
+	public void windowDeactivated(final WindowEvent e) {}
+	@Override
+	public void windowDeiconified(final WindowEvent e) {}
+	@Override
+	public void windowIconified(final WindowEvent e) {}
+	@Override
+	public void windowOpened(final WindowEvent e) {}
 
 }

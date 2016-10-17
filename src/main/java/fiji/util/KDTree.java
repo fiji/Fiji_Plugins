@@ -1,13 +1,13 @@
 package fiji.util;
 
-import fiji.util.node.Leaf;
-import fiji.util.node.Node;
-import fiji.util.node.NonLeaf;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+
+import fiji.util.node.Leaf;
+import fiji.util.node.Node;
+import fiji.util.node.NonLeaf;
 
 public class KDTree<T extends Leaf<T>>
 {
@@ -26,12 +26,15 @@ public class KDTree<T extends Leaf<T>>
 
 	/**
 	 * Construct a KDTree from the elements in the given list.
-	 *
+	 * <p>
 	 * The elements must implement the interface Leaf.
-	 *
-	 * The parameter 'leaves' must be a list and cannot be an iterator,
-	 * as the median needs to be calculated (or estimated, if the length
-	 * is greater than medianLength).
+	 * <p>
+	 * The parameter 'leaves' must be a list and cannot be an iterator, as the
+	 * median needs to be calculated (or estimated, if the length is greater
+	 * than medianLength).
+	 * 
+	 * @param leaves
+	 *            the list of leaves.
 	 */
 	public KDTree(final List<T> leaves) {
 		this( leaves, 100000 );
@@ -152,16 +155,16 @@ public class KDTree<T extends Leaf<T>>
 		if (leaves.size() <= medianLength) {
 			list = new float[leaves.size()];
 			for (int i = 0; i < list.length; i++) {
-				T leaf = leaves.get(i);
+				final T leaf = leaves.get(i);
 				list[i] = leaf.get(k);
 			}
 		}
 		else {
 			list = new float[medianLength];
-			Random random = new Random();
+			final Random random = new Random();
 			for (int i = 0; i < list.length; i++) {
-				int index = Math.abs(random.nextInt()) % list.length;
-				T leaf = leaves.get(index);
+				final int index = Math.abs(random.nextInt()) % list.length;
+				final T leaf = leaves.get(index);
 				list[i] = leaf.get(k);
 			}
 		}
@@ -179,17 +182,18 @@ public class KDTree<T extends Leaf<T>>
 		return dimension;
 	}
 
-	public String toString(Node<T> node, String indent) {
+	public String toString(final Node<T> node, final String indent) {
 		if (node == null)
 			return indent + "null";
 		if (node instanceof Leaf)
 			return indent + node.toString();
-		NonLeaf<T> nonLeaf = (NonLeaf<T>)node;
+		final NonLeaf<T> nonLeaf = (NonLeaf<T>)node;
 		return toString(nonLeaf.left, indent + "\t") + "\n"
 			+ indent + nonLeaf.coordinate + "\n"
 			+ toString(nonLeaf.right, indent + "\t") + "\n";
 	}
 
+	@Override
 	public String toString() {
 		return toString(root, "");
 	}
