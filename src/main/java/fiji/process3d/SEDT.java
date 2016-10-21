@@ -63,9 +63,10 @@ import ij.process.ImageProcessor;
  * are substituted by 0.5 of the same sign.
  */
 public class SEDT implements PlugInFilter {
-	ImagePlus image;
+	ImagePlus image, scaledResult;
 	int w, h, d;
 	int current, total;
+	float minValue, maxValue;
 
 	public int setup(String arg, ImagePlus image) {
 		this.image = image;
@@ -86,12 +87,20 @@ public class SEDT implements PlugInFilter {
 
 		current = 0;
 		total = w * h * d * 3;
+		/* Since X class is the last to call set method,
+		 * it is its set method that takes care of
+		 * updating {min,max}Value
+		 */
+		minValue = 0;
+		maxValue = 0;
 
 		new Z(stack, result).compute();
 		new Y(result).compute();
 		new X(result).compute();
 
-		return new ImagePlus("EDT", result);
+		scaledResult = new ImagePlus("EDT", result);
+		scaledResult.setDisplayRange(minValue, maxValue);
+		return scaledResult;
 	}
 
 	abstract class EDTBase {
@@ -273,6 +282,11 @@ public class SEDT implements PlugInFilter {
 			else
 				value = -0.5f + (float)Math.sqrt(value);
 			slice[x * columnStride + offset] = value;
+			// Update minimum and maximum values for the contrast
+			if (value < minValue)
+				minValue = value;
+			else if (value > maxValue)
+				maxValue = value;
 		}
 	}
 }
