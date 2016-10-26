@@ -10,7 +10,7 @@
 	</parent>
 
 	<artifactId>Fiji_Plugins</artifactId>
-	<version>3.0.1-SNAPSHOT</version>
+	<version>3.1.1-SNAPSHOT</version>
 
 	<name>plugins/Fiji_Plugins.jar</name>
 	<description />
