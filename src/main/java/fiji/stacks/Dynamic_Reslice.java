@@ -393,14 +393,8 @@ public class Dynamic_Reslice implements PlugIn, MouseMotionListener,
 	protected void reslice() {
 	
 		ImageProcessor ip_out;
-		final Roi roi = imp.getRoi();
-		final int roiType = roi != null ? roi.getType() : 0;
+		Roi roi = imp.getRoi();
 
-		/*
-		 * Save calibration
-		 */
-		final Calibration origCal = imp.getCalibration();
-		final double zSpacing = inputZSpacing / imp.getCalibration().pixelWidth;
 
 		/*
 		 * Do reslice and update dest_imp
