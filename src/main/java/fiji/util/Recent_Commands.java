@@ -8,21 +8,15 @@ import ij.Prefs;
 import ij.gui.GenericDialog;
 import ij.plugin.PlugIn;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.Vector;
+import java.util.*;
+import javax.swing.Timer;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -40,6 +34,9 @@ public class Recent_Commands implements ActionListener, CommandListener, KeyList
 	protected static int maxLRUSize = 100;
 	protected static boolean suppressRepeatedCommands = true;
 	protected final static String PREFS_KEY = "recent.command";
+
+	protected static boolean persistent = false;
+	protected static boolean modal = true;
 
 	public void run(String arg) {
 		readPrefs();
@@ -78,7 +75,7 @@ public class Recent_Commands implements ActionListener, CommandListener, KeyList
 		mostRecent.setSelectedIndex(0);
 		mostFrequent.clearSelection();
 
-		dialog = new JDialog(IJ.getInstance(), "Recent Commands", true);
+		dialog = new JDialog(IJ.getInstance(), "Recent Commands", modal);
 		dialog.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = c.HORIZONTAL;
@@ -108,6 +105,28 @@ public class Recent_Commands implements ActionListener, CommandListener, KeyList
 		dialog.add(panel, c);
 		dialog.pack();
 		dialog.setVisible(true);
+
+		if (persistent) {
+			startRefreshTimer();
+		}
+	}
+
+	private javax.swing.Timer timer = null;
+	private void startRefreshTimer() {
+		int delay = 1000; //milliseconds
+		ActionListener taskPerformer = new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				int sel = mostRecent.getSelectedIndex();
+				mostRecent.setListData(getMostRecent(recentListSize));
+				mostRecent.setSelectedIndex(sel);
+				dialog.pack();
+			}
+		};
+		if (timer != null) {
+			timer.stop();
+		}
+		timer = new javax.swing.Timer(delay, taskPerformer);
+		timer.start();
 	}
 
 	JList makeJList(Vector items) {
@@ -119,7 +138,9 @@ public class Recent_Commands implements ActionListener, CommandListener, KeyList
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
 					runSelectedCommand();
-					dialog.dispose();
+					if (!persistent) {
+						dialog.dispose();
+					}
 				}
 			}
 		});
@@ -283,6 +304,11 @@ public class Recent_Commands implements ActionListener, CommandListener, KeyList
 		frequentListSize = (int)Prefs.get(PREFS_KEY + ".frequent-list-size", frequentListSize);
 		maxLRUSize = (int)Prefs.get(PREFS_KEY + ".max-lru-size", maxLRUSize);
 		suppressRepeatedCommands = Prefs.get(PREFS_KEY + ".suppress-repetitions", suppressRepeatedCommands);
+		persistent = Prefs.get(PREFS_KEY + ".persistent", persistent);
+		modal = Prefs.get(PREFS_KEY + ".modal", modal);
+
+
+
 	}
 
 	void showOptionsDialog() {
@@ -291,6 +317,8 @@ public class Recent_Commands implements ActionListener, CommandListener, KeyList
 		gd.addNumericField("size_of_most-frequent_list", frequentListSize, 0);
 		gd.addNumericField("history_size", maxLRUSize, 0);
 		gd.addCheckbox("suppress_repeated_commands", suppressRepeatedCommands);
+		gd.addCheckbox("Modal window", modal);
+		gd.addCheckbox("Persistent", persistent);
 		gd.showDialog();
 		if (gd.wasCanceled())
 			return;
@@ -315,6 +343,17 @@ public class Recent_Commands implements ActionListener, CommandListener, KeyList
 			suppressRepeatedCommands = bool;
 			Prefs.set(PREFS_KEY + ".suppress-repetitions", suppressRepeatedCommands);
 		}
+		bool = gd.getNextBoolean();
+		if (bool != modal) {
+			modal = bool;
+			Prefs.set(PREFS_KEY + ".modal", modal);
+		}
+		bool = gd.getNextBoolean();
+		if (bool != persistent) {
+			persistent = bool;
+			Prefs.set(PREFS_KEY + ".persistent", persistent);
+		}
+
 		mostRecent.setListData(getMostRecent(recentListSize));
 		mostFrequent.setListData(getMostFrequent(frequentListSize));
 		dialog.pack();
