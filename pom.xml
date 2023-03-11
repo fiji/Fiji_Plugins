@@ -11,7 +11,7 @@
 
 	<groupId>sc.fiji</groupId>
 	<artifactId>Fiji_Plugins</artifactId>
-	<version>3.1.3-SNAPSHOT</version>
+	<version>3.1.3</version>
 
 	<name>Fiji Plugins</name>
 	<description>Fiji Plugins plugin for Fiji.</description>
@@ -101,7 +101,7 @@
 	<scm>
 		<connection>scm:git:https://github.com/fiji/Fiji_Plugins</connection>
 		<developerConnection>scm:git:git@github.com:fiji/Fiji_Plugins</developerConnection>
-		<tag>HEAD</tag>
+		<tag>Fiji_Plugins-3.1.3</tag>
 		<url>https://github.com/fiji/Fiji_Plugins</url>
 	</scm>
 	<issueManagement>
