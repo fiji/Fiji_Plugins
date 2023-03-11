@@ -137,7 +137,7 @@ public class Circle_Fitter implements PlugInFilter {
 	 */
 	public OvalRoi calculateRoi() {
 
-		if (ip==null || threshold == Float.NaN) { return null; }
+		if (ip==null || Float.isNaN(threshold)) { return null; }
 		
 		// calculate mean centroid
 		float x, y, total;
