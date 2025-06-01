@@ -21,16 +21,26 @@
  */
 package fiji.color;
 
+import ij.IJ;
 import ij.ImagePlus;
+import ij.ImageStack;
+import ij.gui.GenericDialog;
 import ij.plugin.filter.PlugInFilter;
 import ij.process.ColorProcessor;
 import ij.process.ImageProcessor;
 
 /**
-* Convert all reds to magentas (to help red-green blind viewers)
+* Convert all reds to magentas (to help red-green blind viewers).
+* <p>
+* Updated May 30, 2025 to apply to all slices in a stack
+* by Jeff Hardin, Dept. of Integrative Biology
+* Univ. of Wisconsin-Madison
+* </p>
 */
 public class Convert_Red_To_Magenta implements PlugInFilter {
 	protected ImagePlus image;
+	public int numSlices, currentSlice;
+	public ImageStack stack;
 
 	/**
 	 * This method gets called by ImageJ / Fiji to determine
@@ -40,6 +50,11 @@ public class Convert_Red_To_Magenta implements PlugInFilter {
 	 * @param image is the currently opened image
 	 */
 	public int setup(String arg, ImagePlus image) {
+		if (image!= null) {
+			stack = image.getStack();
+			numSlices = stack.getSize(); // Get the number of slices
+			currentSlice = image.getCurrentSlice(); // Get current slice
+		}
 		this.image = image;
 		return DOES_RGB;
 	}
@@ -51,8 +66,34 @@ public class Convert_Red_To_Magenta implements PlugInFilter {
 	 * the ImagePlus set above instead).
 	 */
 	public void run(ImageProcessor ip) {
-		process((ColorProcessor)ip);
-		image.updateAndDraw();
+		if (stack.isVirtual()) {
+			IJ.showMessage("Virtual Stack", "This plugin does not support virtual stacks.");
+			return;
+		}
+
+		if (numSlices == 1) {
+			process((ColorProcessor)ip);
+			image.updateAndDraw();
+		}
+		else {
+			//Ask user if OK to apply to all slices in a stack
+			GenericDialog gd = new GenericDialog("Apply to entire stack?");
+			gd.addMessage("Replace red with magenta in all slices?\n \n" +
+				"NOTE: There is no undo for this operation.");
+			gd.showDialog();
+			if (gd.wasCanceled()) {
+				return;
+			}
+			for (int i = 0; i < numSlices; i++) {
+				//image.setSlice(i+1);
+				IJ.showStatus("Processing slice " + (i+1) + " of " + numSlices);
+				IJ.showProgress(i/numSlices);
+				ImageProcessor ip2 = stack.getProcessor(i+1);
+				process((ColorProcessor)ip2);
+			}
+			image.setSlice(currentSlice);
+			image.updateAndDraw();
+		}
 	}
 
 	public static void process(ColorProcessor ip) {
